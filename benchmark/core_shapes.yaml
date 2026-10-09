@@ -1123,6 +1123,19 @@ repeat_interleave_tensor:
     - [64, 64, 64, 64]
   shape_desc: "M, N, K"
 
+moe_load_balance_loss: &moe_load_balance_loss_shapes
+  shapes:
+    - [256, 8, 2]
+    - [1024, 8, 2]
+    - [4096, 16, 2]
+    - [4096, 64, 4]
+    - [16384, 64, 4]
+    - [32768, 128, 8]
+  shape_desc: "T, N_e, K"
+
+moe_load_balance_loss_mask:
+  <<: *moe_load_balance_loss_shapes
+
 adaptive_max_pool3d:
   shapes:
     - [[1, 4, 8, 24, 32], [1, 1, 1]]

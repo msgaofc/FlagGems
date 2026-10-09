@@ -142,6 +142,11 @@ target_link_libraries(test_triton_cross_attention
   PRIVATE Torch::Torch operators GTest::gtest GTest::gtest_main)
 add_test(NAME test_triton_cross_attention COMMAND test_triton_cross_attention)
 
+add_executable(test_triton_moe_load_balancing_loss test_triton_moe_load_balancing_loss.cpp)
+target_link_libraries(test_triton_moe_load_balancing_loss
+  PRIVATE Torch::Torch operators GTest::gtest GTest::gtest_main)
+add_test(NAME test_triton_moe_load_balancing_loss COMMAND test_triton_moe_load_balancing_loss)
+
 add_executable(test_triton_rwkv_ka_fusion test_triton_rwkv_ka_fusion.cpp)
 target_link_libraries(test_triton_rwkv_ka_fusion
   PRIVATE Torch::Torch operators GTest::gtest GTest::gtest_main)
@@ -160,8 +165,12 @@ add_test(NAME test_triton_copy COMMAND test_triton_copy)
 # Set FLAGGEMS_SOURCE_DIR for all tests that load Triton kernels at runtime.
 # The Python sources live in the parent repo (cpp/ is one level below repo root).
 set(_FLAGGEMS_SRC_DIR "${CMAKE_SOURCE_DIR}/../src/flag_gems")
+# Kernels are read from the source tree, and several of them (including the
+# T-Head specializations) import flag_gems at extraction time, so the tests need
+# the source tree on the Python path as well.
+set(_FLAGGEMS_PYTHONPATH "${CMAKE_SOURCE_DIR}/../src")
 get_property(_all_tests DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY TESTS)
 foreach(_t IN LISTS _all_tests)
   set_tests_properties(${_t} PROPERTIES
-    ENVIRONMENT "FLAGGEMS_SOURCE_DIR=${_FLAGGEMS_SRC_DIR}")
+    ENVIRONMENT "FLAGGEMS_SOURCE_DIR=${_FLAGGEMS_SRC_DIR};PYTHONPATH=${_FLAGGEMS_PYTHONPATH}")
 endforeach()

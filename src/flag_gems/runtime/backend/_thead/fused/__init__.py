@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from .moe_load_balancing_loss import moe_load_balance_loss
 from .unified_attention import unified_attention
 
 __all__ = [
+    "moe_load_balance_loss",
     "unified_attention",
 ]

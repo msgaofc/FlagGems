@@ -149,6 +149,16 @@ PYBIND11_MODULE(c_operators, m) {
       py::arg("value"),
       py::arg("attn_mask") = py::none(),
       py::arg("scale") = py::none());
+  m.def(
+      "moe_load_balance_loss",
+      [](const at::Tensor& gate_logits,
+         int64_t top_k,
+         const std::optional<at::Tensor>& attention_mask) {
+        return flag_gems::moe_load_balance_loss(gate_logits, top_k, attention_mask);
+      },
+      py::arg("gate_logits"),
+      py::arg("top_k") = 2,
+      py::arg("attention_mask") = py::none());
   m.def("rwkv_mm_sparsity", &flag_gems::rwkv_mm_sparsity);
   m.def("rwkv_ka_fusion", &flag_gems::rwkv_ka_fusion);
   m.def("copy_", &flag_gems::copy_);
